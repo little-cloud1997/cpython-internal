@@ -5,29 +5,41 @@ on:
     branches:
       - master
     paths:
-      - src/**
-      - book.toml
+      - 'src/**'
+      - 'book.toml'
   pull_request:
+
+# 添加必要的权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
-    runs-on: ubuntu-20.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v4  # 更新到 v4
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
       - name: Setup mdBook
         uses: peaceiris/actions-mdbook@v1
         with:
           mdbook-version: '0.4.18'
-          # mdbook-version: 'latest'
-
-      - run: mdbook build
-
+      
+      - name: Build with mdBook
+        run: mdbook build
+      
       - name: Deploy
+        if: github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/master' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./book
