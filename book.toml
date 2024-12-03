@@ -1,0 +1,12 @@
+[book]
+authors = ["古明地觉"]
+language = "zh-cn"
+multilingual = false
+src = "src"
+title = "CPython3.8 源码探秘"
+
+[output.html]
+mathjax-support = true
+no-section-label = true
+git-repository-url = "https://github.com/little-cloud1997/cpython-internal"
+git-repository-icon = "fa-github"
